@@ -1,6 +1,7 @@
 import turtle
 from random import randrange
 from msvcrt import getch, kbhit
+from time import sleep
 
 wn = turtle.Screen()
 
@@ -15,11 +16,28 @@ food.speed(0)
 food.shape('circle')
 food.turtlesize(0.7, 0.7)
 food.color('red')
+food.setposition(randrange(-20, 20) * 10, randrange(-20, 20) * 10)
+
 pos = [0, 0]
 count = 0
-total = 3
-food.setposition(randrange(-20, 20) * 10, randrange(-20, 20) * 10)
+total = 0
 pastpos = []
+
+def gameover():
+    pos[0] = 0
+    pos[1] = 0
+    count = 0
+    total = 0
+    for i in range(len(pastpos)):
+        del pastpos[0]
+        wn.bgcolor('red')
+        sleep(0.05)
+        sss.clearstamps(1)
+        wn.bgcolor('white')
+        sleep(0.05)
+
+    food.setposition(randrange(-20, 20) * 10, randrange(-20, 20) * 10)
+    
 
 def changepos(dirc, neg):
     if dirc == 'X':
@@ -69,8 +87,11 @@ while True:
     if key == 27: #ESC
         break
     count += 1
-    
+    if pos in pastpos:
+        print('gameover')
+        gameover()
     sss.stamp()
+    pastpos = pastpos + [pos[0:]]
     sss.setposition(pos[0], pos[1])
     if sss.distance(food) < 10:
         total += 2
@@ -78,6 +99,7 @@ while True:
     if count > total:
         sss.clearstamps(1)
         count = count - 1
+        del pastpos[0]
     
 
 wn.bye()
