@@ -22,6 +22,7 @@ pos = [0, 0]
 count = 0
 total = 0
 pastpos = []
+pastkey = 72
 
 def gameover():
     pos[0] = 0
@@ -63,10 +64,15 @@ def pause():
             break
     
 
-def getkey():
+def getkey(pastkey, pk=None):
     while kbhit() == 0:
         pass
-    key = ord(getch())
+    if pk:
+        key = pk
+        print(pk, "pk")
+    else:
+        key = ord(getch())
+        print(key, "get")
     if key == 27: #ESC
         key = pause()
         if key == 27:
@@ -80,13 +86,21 @@ def getkey():
     elif key == 77: #Right arrow
         changepos('X', '+')
     else:
-        getkey()
+        print(pastkey, "else")
+        getkey(pastkey, pastkey)
+    if pk:
+        return pk
+    else:
+        return key
 
 while True:
-    key = getkey()
+    print(pastkey, "past")
+    key = getkey(pastkey)
     if key == 27: #ESC
         break
     count += 1
+    pastkey = key
+    print(pastkey, "key")
     if pos in pastpos:
         print('gameover')
         gameover()
