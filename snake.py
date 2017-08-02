@@ -12,17 +12,31 @@ class Snake(turtle.Turtle):
     pastkey = 72
     wn = turtle.Screen()
 
-    def __init__(self,*args,**kwargs):
+    def __init__(self, diff, *args,**kwargs):
         super(Snake,self).__init__(*args,**kwargs)
-        print("Time for my turtle snake!")
+        print("Creating Snake... \n DONE")
         self.up()
         self.speed(0)
         self.shape('circle')
-
-    def gameover(self):
+        self.diff = diff
+        if diff == 1:
+            self.time = 0.04
+        elif diff == 2:
+            self.time = 0.01
+        else:
+            self.time = 0.000001
+    def border(self):
+        self.setpos(-250, -250)
+        self.down()
+        for i in range(4):
+            self.forward(500)
+            self.left(90)
+        self.up()
+        self.setpos(0, 0)
+    def gameover(self, type):
         self.pos[0] = 0
         self.pos[1] = 0
-        self.count = 1
+        self.count = type
         self.total = 0
         cs = 1
         if (len(self.pastpos)) > 39:
@@ -30,10 +44,10 @@ class Snake(turtle.Turtle):
         for i in range(len(self.pastpos)// cs):
             del self.pastpos[0]
             self.wn.bgcolor('red')
-            sleep(0.03)
+            sleep(self.time)
             self.clearstamps(cs)
             self.wn.bgcolor('white')
-            sleep(0.03)
+            sleep(self.time)
         self.pastpos = []
         self.setposition(self.pos[0], self.pos[1])
         
@@ -67,9 +81,9 @@ class Snake(turtle.Turtle):
         
 
     def getkey(self):
+        sleep(self.time)
         if kbhit() == 0:
             key = self.pastkey
-            sleep(0.01)
         else:
             key = ord(getch())
         if key == 27: #ESC
@@ -93,13 +107,24 @@ class Food(turtle.Turtle):
     """Snakes Food"""
     def __init__(self,*args,**kwargs):
         super(Food,self).__init__(*args,**kwargs)
-        print("Time for FOOD!")
         self.up()
         self.speed(0)
         self.shape('circle')
         self.turtlesize(0.7, 0.7)
         self.color('red')
         self.setposition(randrange(-20, 20) * 10, randrange(-20, 20) * 10)
+
+    def setpos(self):
+        self.setposition(randrange(-20, 20) * 10, randrange(-20, 20) * 10)
+
+class Sharp(turtle.Turtle):
+    def __init__(self,*args,**kwargs):
+        super(Sharp,self).__init__(*args,**kwargs)
+        self.up()
+        self.speed(0)
+        self.shape('sharp')
+        self.turtlesize(2, 2)
+        self.color('green')
 
     def setpos(self):
         self.setposition(randrange(-20, 20) * 10, randrange(-20, 20) * 10)
