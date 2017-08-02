@@ -25,6 +25,7 @@ class Snake(turtle.Turtle):
             self.time = 0.01
         else:
             self.time = 0.000001
+
     def border(self):
         self.setpos(-250, -250)
         self.down()
@@ -33,6 +34,7 @@ class Snake(turtle.Turtle):
             self.left(90)
         self.up()
         self.setpos(0, 0)
+
     def gameover(self, type):
         self.pos[0] = 0
         self.pos[1] = 0
@@ -51,7 +53,6 @@ class Snake(turtle.Turtle):
         self.pastpos = []
         self.setposition(self.pos[0], self.pos[1])
         
-
     def changepos(self, dirc, neg):
         if dirc == 'X':
             if neg == '-':
@@ -68,18 +69,7 @@ class Snake(turtle.Turtle):
         print("to start game press any key")
         key = ord(getch())
         print("START")
-
-    def pause(self):
-        print("paused")
-        print('to exit press esc')
-        print("to resume press any key")
-        key = ord(getch())
-        if key == 27:
-            print("EXITED")
-            return 27
-        print("resumed")
         
-
     def getkey(self):
         sleep(self.time)
         if kbhit() == 0:
@@ -87,9 +77,7 @@ class Snake(turtle.Turtle):
         else:
             key = ord(getch())
         if key == 27: #ESC
-            key = self.pause()
-            if key == 27:
-                return 27
+            return 27
         if key == 80: #Down arrow
             self.changepos('Y', '-')
         elif key == 72: #Up arrow
