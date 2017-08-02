@@ -5,16 +5,8 @@ class Game():
 
     def __init__(self):
         self.sss = 'sss'
-        self.diff = int(input("pick self.difficulty 1:easy 2:normal 3:insane \n"))
-        if self.diff == 1:
-            self.foodnum = 3
-            self.sharpnum = 1
-        elif self.diff == 2:
-            self.foodnum = 2
-            self.sharpnum = 4
-        else:
-            self.foodnum = 1
-            self.sharpnum = 8
+        self.diff = int(input("pick difficulty: 1:easy 2:normal 3:hard \n"))
+        self.setdiff()
         self.ouch = ['s','sh','sha','shar','sharp','sharps','sharpsh','sharpsha','sharpshar','sharpsharp','sharpsharps','sharpsharpsh',]
         self.yum = ['fo','foo','food']
 
@@ -24,14 +16,33 @@ class Game():
             if self.ouch[i].distance(self.yum[y]) < 30:
                 self.comp(i)
 
-    def start(self):
+    def setdiff(self):
+        if self.diff == 1:
+            self.foodnum = 3
+            self.sharpnum = 1
+        elif self.diff == 2:
+            self.foodnum = 2
+            self.sharpnum = 4
+        else:
+            self.foodnum = 1
+            self.sharpnum = 8
+
+    def create(self):
         for i in range(self.foodnum):
             self.yum[i] = Food()
         for i in range(self.sharpnum):
             self.ouch[i] = Sharp()
-            self.comp(i)
-        print("Snake is hungy! \n BUT")
-        print("Watch out for sharp things!!!")
+            self.comp(i) 
+
+    def start(self):
+        self.sss = Snake(self.diff)
+        self.sss.border()
+        self.sss.wn.register_shape("sharp", ((5,-3), (1,1), (0,5), (-1,1), (-5,-3), (0,-1)))
+        self.create()
+        print("Snake is hungy! \nBUT \nWatch out for sharp things!!!")
+        self.sss.begin()
+        print("to pause press esc")
+        self.play()
 
     def restart(self):
         for i in range(self.foodnum):
@@ -47,7 +58,7 @@ class Game():
     def alive(self):
         if self.sss.pos in self.sss.pastpos:
             print('gameover')
-            self.sss.gameover(1)
+            self.sss.gameover()
             self.restart()
             self.sss.begin()
 
@@ -64,13 +75,7 @@ class Game():
         if key == 27:
             key = self.pause()
 
-    def play(self):
-        self.sss = Snake(self.diff)
-        self.sss.border()
-        self.sss.wn.register_shape("sharp", ((5,-3), (1,1), (0,5), (-1,1), (-5,-3), (0,-1)))
-        self.start()
-        self.sss.begin()
-        print("to pause press esc")
+    def play(self):   
         while True:
             key = self.sss.getkey()
             if key == 27: #ESC
@@ -90,7 +95,8 @@ class Game():
                     self.doublecheck(i)
             for i in range(self.sharpnum):
                 if self.sss.distance(self.ouch[i]) < 20:
-                    self.sss.gameover(0)
+                    print('gameover')
+                    self.sss.gameover()
                     self.restart()
                     self.sss.begin()
             if self.sss.count > self.sss.total:
