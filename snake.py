@@ -19,9 +19,24 @@ class Snake(turtle.Turtle):
         self.speed(0)
         self.shape('circle')
         self.diff = diff
-        if diff == 1:
+        if self.diff == 4:
+            self.total = 20
+        self.settime()
+
+    def reset(self):
+        self.settime()
+        self.pos = [0, 0]
+        self.count = 0
+        self.total = 2
+        if self.diff == 4:
+            self.total = 20
+        self.pastpos = []
+        self.setposition(self.pos[0], self.pos[1])
+
+    def settime(self):
+        if self.diff == 1:
             self.time = 0.04
-        elif diff == 2:
+        elif self.diff == 2:
             self.time = 0.01
         else:
             self.time = 0.000001
@@ -39,6 +54,8 @@ class Snake(turtle.Turtle):
         self.pos[0] = 0
         self.pos[1] = 0
         self.count = 0
+        if self.diff == 4:
+            self.total = 20
         self.total = 2
         cs = 1
         if (len(self.pastpos)) > 39:

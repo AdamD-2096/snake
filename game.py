@@ -1,11 +1,11 @@
 from snake import Snake, Food, Sharp
 from msvcrt import getch
-
+import sys
 class Game():
 
     def __init__(self):
         self.sss = 'sss'
-        self.diff = int(input("pick difficulty: 1:easy 2:normal 3:hard \n"))
+        self.diff = int(input("pick difficulty: 1:easy 2:normal 3:hard 4:insane\n"))
         self.setdiff()
         self.ouch = ['s','sh','sha','shar','sharp','sharps','sharpsh','sharpsha','sharpshar','sharpsharp','sharpsharps','sharpsharpsh',]
         self.yum = ['fo','foo','food']
@@ -15,6 +15,22 @@ class Game():
         for y in range(self.foodnum):
             if self.ouch[i].distance(self.yum[y]) < 30:
                 self.comp(i)
+    def hideall(self):
+        self.sss.clearstamps()
+        for i in range(self.foodnum):
+            self.yum[i].ht()
+        for i in range(self.sharpnum):
+            self.ouch[i].ht()
+        
+    def changediff(self):
+        self.hideall()
+        self.diff = int(input("pick difficulty: 1:easy 2:normal 3:hard 4:insane\n"))
+        self.setdiff()
+        self.create()
+        self.sss.diff = self.diff
+        self.sss.reset()
+        self.sss.begin()
+        done = self.play()
 
     def setdiff(self):
         if self.diff == 1:
@@ -23,9 +39,12 @@ class Game():
         elif self.diff == 2:
             self.foodnum = 2
             self.sharpnum = 4
-        else:
+        elif self.diff == 3:
             self.foodnum = 1
             self.sharpnum = 8
+        else:
+            self.foodnum = 2
+            self.sharpnum = 12
 
     def create(self):
         for i in range(self.foodnum):
@@ -42,7 +61,7 @@ class Game():
         print("Snake is hungy! \nBUT \nWatch out for sharp things!!!")
         self.sss.begin()
         print("to pause press esc")
-        self.play()
+        done = self.play()
 
     def restart(self):
         for i in range(self.foodnum):
@@ -63,17 +82,19 @@ class Game():
             self.sss.begin()
 
     def pause(self):
-        print("paused")
-        print('to exit press esc')
-        print("to resume press any key")
+        print("paused\nto exit press esc")
+        print("if you'd like to change the difficulty\n press enter")
+        print("\nto resume press any other key")
         key = ord(getch())
         if key == 27:
-            print("EXITED")
             return 27
-        print("resumed")
-        key = self.sss.getkey()
-        if key == 27:
-            key = self.pause()
+        elif key == 13:
+            self.changediff()
+        else:
+            print("resumed")
+            key = self.sss.getkey()
+            if key == 27:
+                key = self.pause()
 
     def play(self):   
         while True:
@@ -81,8 +102,8 @@ class Game():
             if key == 27: #ESC
                 key = self.pause()
                 if key == 27:
-                    break
-
+                    print("EXITED")
+                    sys.exit()
             self.sss.count += 1
             self.alive()
             self.sss.stamp()
