@@ -7,7 +7,7 @@ class Snake(turtle.Turtle):
     """My Snake turtle"""
     pos = [0, 0]
     count = 0
-    total = 0
+    total = 2
     pastpos = []
     pastkey = 72
     wn = turtle.Screen()
@@ -35,14 +35,16 @@ class Snake(turtle.Turtle):
         self.up()
         self.setpos(0, 0)
 
-    def gameover(self, type):
+    def gameover(self):
         self.pos[0] = 0
         self.pos[1] = 0
-        self.count = type
-        self.total = 0
+        self.count = 0
+        self.total = 2
         cs = 1
         if (len(self.pastpos)) > 39:
             cs = 2
+        if (len(self.pastpos)) > 100:
+            cs = 5
         for i in range(len(self.pastpos)// cs):
             del self.pastpos[0]
             self.wn.bgcolor('red')
@@ -50,6 +52,7 @@ class Snake(turtle.Turtle):
             self.clearstamps(cs)
             self.wn.bgcolor('white')
             sleep(self.time)
+        self.clearstamps()
         self.pastpos = []
         self.setposition(self.pos[0], self.pos[1])
         
@@ -65,6 +68,7 @@ class Snake(turtle.Turtle):
                 self.pos[1] += -10
             else:
                 self.pos[1] += 10
+                
     def begin(self):
         print("to start game press any key")
         key = ord(getch())
