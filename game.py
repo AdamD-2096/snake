@@ -1,8 +1,10 @@
 from snake import Snake, Food, Sharp
+from msvcrt import getch
 
 class Game():
 
     def __init__(self):
+        self.sss = 'sss'
         self.diff = int(input("pick self.difficulty 1:easy 2:normal 3:insane \n"))
         if self.diff == 1:
             self.foodnum = 3
@@ -36,46 +38,65 @@ class Game():
             self.yum[i].setpos()
         for i in range(self.sharpnum):
             self.comp(i)
+
     def doublecheck(self, i):
         for y in range(self.sharpnum):
             if self.yum[i].distance(self.ouch[y]) < 30:
                 self.yum[i].setpos()
                 self.doublecheck(i)
+    def alive(self):
+        if self.sss.pos in self.sss.pastpos:
+            print('gameover')
+            self.sss.gameover(1)
+            self.restart()
+            self.sss.begin()
+
+    def pause(self):
+        print("paused")
+        print('to exit press esc')
+        print("to resume press any key")
+        key = ord(getch())
+        if key == 27:
+            print("EXITED")
+            return 27
+        print("resumed")
+        key = self.sss.getkey()
+        if key == 27:
+            key = self.pause()
 
     def play(self):
-        sss = Snake(self.diff)
-        sss.border()
-        sss.wn.register_shape("sharp", ((5,-3), (1,1), (0,5), (-1,1), (-5,-3), (0,-1)))
+        self.sss = Snake(self.diff)
+        self.sss.border()
+        self.sss.wn.register_shape("sharp", ((5,-3), (1,1), (0,5), (-1,1), (-5,-3), (0,-1)))
         self.start()
-        sss.begin()
+        self.sss.begin()
         print("to pause press esc")
         while True:
-            key = sss.getkey()
+            key = self.sss.getkey()
             if key == 27: #ESC
-                break
-            sss.count += 1
-            if sss.pos in sss.pastpos:
-                print('gameover')
-                sss.gameover(1)
-                self.restart()
-                sss.begin()
-            sss.stamp()
-            sss.pastpos = sss.pastpos + [sss.pos[0:]]
-            sss.setposition(sss.pos[0], sss.pos[1])
+                key = self.pause()
+                if key == 27:
+                    break
+
+            self.sss.count += 1
+            self.alive()
+            self.sss.stamp()
+            self.sss.pastpos = self.sss.pastpos + [self.sss.pos[0:]]
+            self.sss.setposition(self.sss.pos[0], self.sss.pos[1])
             for i in range(self.foodnum):
-                if sss.distance(self.yum[i]) < 10:
-                    sss.total += 2
+                if self.sss.distance(self.yum[i]) < 10:
+                    self.sss.total += 2
                     self.yum[i].setpos()
                     self.doublecheck(i)
             for i in range(self.sharpnum):
-                if sss.distance(self.ouch[i]) < 20:
-                    sss.gameover(0)
+                if self.sss.distance(self.ouch[i]) < 20:
+                    self.sss.gameover(0)
                     self.restart()
-                    sss.begin()
-            if sss.count > sss.total:
-                sss.clearstamps(1)
-                sss.count = sss.count - 1
-                del sss.pastpos[0]
-        sss.wn.bye()
+                    self.sss.begin()
+            if self.sss.count > self.sss.total:
+                self.sss.clearstamps(1)
+                self.sss.count = self.sss.count - 1
+                del self.sss.pastpos[0]
+        self.sss.wn.bye()
 
     
